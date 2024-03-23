@@ -82,8 +82,17 @@ function getDayName(date) {
  * Date('2024-02-13T00:00:00Z') => Date('2024-02-16T00:00:00Z')
  * Date('2024-02-16T00:00:00Z') => Date('2024-02-23T00:00:00Z')
  */
-function getNextFriday(/* date */) {
-  throw new Error('Not implemented');
+function getNextFriday(date) {
+  const realDate = new Date(date);
+  const todayDay = realDate.getDay();
+
+  const daysToFriday = (5 - todayDay + 7) % 7;
+  let finalDate = realDate.getTime() + 86400000 * daysToFriday;
+  if (todayDay === 5) {
+    finalDate = realDate.getTime() + 86400000 * 7;
+  }
+
+  return new Date(finalDate);
 }
 
 /**
@@ -97,8 +106,12 @@ function getNextFriday(/* date */) {
  * 1, 2024 => 31
  * 2, 2024 => 29
  */
-function getCountDaysInMonth(/* month, year */) {
-  throw new Error('Not implemented');
+function getCountDaysInMonth(month, year) {
+  const date = new Date(Date.UTC(year, month, 1));
+
+  date.setUTCDate(date.getUTCDate() - 1);
+
+  return date.getUTCDate();
 }
 
 /**
@@ -112,8 +125,12 @@ function getCountDaysInMonth(/* month, year */) {
  * '2024-02-01T00:00:00.000Z', '2024-02-02T00:00:00.000Z'  => 2
  * '2024-02-01T00:00:00.000Z', '2024-02-12T00:00:00.000Z'  => 12
  */
-function getCountDaysOnPeriod(/* dateStart, dateEnd */) {
-  throw new Error('Not implemented');
+function getCountDaysOnPeriod(dateStart, dateEnd) {
+  const startOfPeriod = new Date(dateStart);
+  const endOfPeriod = new Date(dateEnd);
+  const time = endOfPeriod.getTime() - startOfPeriod.getTime();
+  const totalDays = Math.ceil(time / (1000 * 60 * 60 * 24)) + 1;
+  return totalDays;
 }
 
 /**
@@ -133,8 +150,14 @@ function getCountDaysOnPeriod(/* dateStart, dateEnd */) {
  * '2024-02-02', { start: '2024-02-02', end: '2024-03-02' } => true
  * '2024-02-10', { start: '2024-02-02', end: '2024-03-02' } => true
  */
-function isDateInPeriod(/* date, period */) {
-  throw new Error('Not implemented');
+function isDateInPeriod(date, period) {
+  const startOfPeriod = new Date(period.start);
+  const endOfPeriod = new Date(period.end);
+  const startTime = startOfPeriod.getTime();
+  const endTime = endOfPeriod.getTime();
+  const dateToCompare = new Date(date);
+  const timeToCompare = dateToCompare.getTime();
+  return timeToCompare >= startTime && timeToCompare <= endTime;
 }
 
 /**
